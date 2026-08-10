@@ -1,10 +1,28 @@
 # Probabilistic Sales Forecasting — Monte Carlo & Bootstrap Simulation
 
-*[中文版](README.md)*
+*[中文版](README.md)　|　Capstone project, MSc Financial Data Technology, University College Dublin*
 
 > Replacing a single-point sales forecast with a full distribution of outcomes, so a business can plan against **risk** rather than against one number.
 
 Built on three years of AdventureWorks transaction history (121,253 order lines, $109.8M in sales), this project delivers a 12-month forecast as a probability distribution, quantifies the chance of hitting management targets, and produces channel / category / region breakdowns that reconcile exactly with the company total.
+
+---
+
+## Context and scope
+
+**Business situation.** AdventureWorks (retail and wholesale of bicycles and accessories) planned annually from single-point sales forecasts. Leadership wanted a risk-aware alternative — not just a forecast value, but the full range of plausible outcomes and the probability of hitting financial targets. The analyst brief was to supply that probabilistic view for resource allocation and risk management.
+
+**Required scope.** Forecast the next 12 months using two simulation methods — Monte Carlo (top-down, simulating the annual growth rate) and bootstrap (bottom-up, resampling historical daily sales); compare their assumptions, strengths and limitations; and deliver a planning range to management.
+
+**Work added beyond that scope** (all detailed below):
+
+- Identified and solved a **blocking methodological problem**: too few complete years left only one growth observation, resolved by evaluating three alternative definitions and adopting a rolling fiscal year
+- Three bootstrap refinements: month stratification, joint-day resampling (coherent segment forecasts), and an adapted transaction-level Poisson simulation
+- Sensitivity analysis across five assumption sets, plus three independently coded implementations cross-validating each other
+- Data-boundary diagnostics (identified an extraction cutoff, not declining demand)
+- A six-page interactive Power BI dashboard and a three-minute management pitch
+
+---
 
 **Deliverables:** [Executive report (PDF)](report/Executive_Report.pdf) · [Analysis notebook](notebooks/sales_forecasting_simulation.ipynb) · [**⬇️ Download Power BI dashboard**](https://github.com/siiucd1-cyber/adventureworks-sales-forecasting/raw/main/dashboard/powerbi_dashboard.pbix)
 

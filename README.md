@@ -1,10 +1,26 @@
 # 概率化销售预测 —— 蒙特卡洛与 Bootstrap 模拟
 
-*[English version](README.en.md)*
+*[English version](README.en.md)　|　都柏林大学（UCD）Financial Data Technology 课程期末项目*
 
 > 用完整的结果分布替代单点销售预测，让企业针对**风险**做规划，而不是针对一个数字。
 
 基于 AdventureWorks 三年交易历史（121,253 行订单明细，销售额 1.098 亿美元）构建，本项目将 12 个月销售预测输出为概率分布，量化管理层目标的达成概率，并产出与总量精确一致的渠道 / 品类 / 区域分项预测。
+
+---
+
+## 项目背景与范围
+
+**业务场景**：AdventureWorks（自行车与配件的零售 / 批发企业）的年度规划长期依赖单点销售预测。管理层希望转向风险感知的预测方式——不仅要知道预测值是多少，更要知道全部可能结果的区间，以及达成财务目标的概率。分析师角色的任务是提供这套概率化视角，用于资源配置与风险管理。
+
+**任务要求的范围**：用两种模拟方法预测未来 12 个月销售——蒙特卡洛（自上而下，模拟年增长率）与 Bootstrap（自下而上，重抽样历史日销售）；对比两者的假设、优劣与适用场景；最终向管理层交付可用于规划的预测区间。
+
+**在此基础上的扩展工作**（下文均有详述）：
+
+- 识别并解决了原方法在本数据上的**致命障碍**：完整年度不足导致增长率仅有 1 个观测值，通过三方案对比确立滚动财年口径
+- 三项 Bootstrap 改进：按月分层、同日联合抽样（层级一致的分项预测）、交易级泊松模拟
+- 五组假设的敏感性分析 + 三套独立实现的交叉验证
+- 数据边界诊断（识别出"提取截断"而非"业务萎缩"）
+- 六页 Power BI 交互式仪表板与三分钟管理层汇报
 
 **交付物：**[📄 执行报告（PDF）](report/Executive_Report.pdf) · [📓 分析代码（Notebook）](notebooks/sales_forecasting_simulation.ipynb) · [**⬇️ 下载 Power BI 仪表板**](https://github.com/siiucd1-cyber/adventureworks-sales-forecasting/raw/main/dashboard/powerbi_dashboard.pbix)
 
