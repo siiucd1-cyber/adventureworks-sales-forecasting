@@ -6,7 +6,7 @@
 
 基于 AdventureWorks 三年交易历史（121,253 行订单明细，销售额 1.098 亿美元）构建，本项目将 12 个月销售预测输出为概率分布，量化管理层目标的达成概率，并产出与总量精确一致的渠道 / 品类 / 区域分项预测。
 
-**交付物：**[执行报告（PDF）](report/Executive_Report.pdf) · [分析代码（Notebook）](notebooks/sales_forecasting_simulation.ipynb) · [Power BI 仪表板](dashboard/powerbi_dashboard.pbix)（`.pbix` 文件，需下载后用 Power BI Desktop 打开；下方"仪表板"一节说明其内容）
+**交付物：**[📄 执行报告（PDF）](report/Executive_Report.pdf) · [📓 分析代码（Notebook）](notebooks/sales_forecasting_simulation.ipynb) · [**⬇️ 下载 Power BI 仪表板**](https://github.com/siiucd1-cyber/adventureworks-sales-forecasting/raw/main/dashboard/powerbi_dashboard.pbix)
 
 ---
 
@@ -128,7 +128,11 @@ AdventureWorks 长期依赖单点预测做年度规划。管理层需要回答�
 | 05 Segment | 分段预测条形图 + 维度切片器（渠道 / 品类 / 区域一键切换） |
 | 06 Recommendation | 四档情景 KPI 卡与最终建议 |
 
-> `.pbix` 是二进制格式，GitHub 无法在线预览——点击文件只会看到下载链接，这是正常现象。本仓库 `figures/` 目录下的图表由 notebook 生成，内容与仪表板一致，可直接在线查看。
+### ⬇️ [点此下载仪表板文件（powerbi_dashboard.pbix，390 KB）](https://github.com/siiucd1-cyber/adventureworks-sales-forecasting/raw/main/dashboard/powerbi_dashboard.pbix)
+
+下载后用 **Power BI Desktop**（Windows 免费软件）打开即可查看全部 6 页与交互功能。
+
+> 说明：`.pbix` 是二进制格式，GitHub 无法在线预览——直接点仓库里的文件只会看到一个空白页面，这是正常现象，请使用上方下载链接。本仓库 `figures/` 目录下的图表由 notebook 生成，内容与仪表板一致，无需下载即可在线查看。
 
 ---
 
