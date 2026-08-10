@@ -6,7 +6,7 @@
 
 基于 AdventureWorks 三年交易历史（121,253 行订单明细，销售额 1.098 亿美元）构建，本项目将 12 个月销售预测输出为概率分布，量化管理层目标的达成概率，并产出与总量精确一致的渠道 / 品类 / 区域分项预测。
 
-**交付物：**[执行报告（PDF）](report/Executive_Report.pdf) · [分析代码（Notebook）](notebooks/sales_forecasting_simulation.ipynb) · [Power BI 仪表板](dashboard/powerbi_dashboard.pbix)
+**交付物：**[执行报告（PDF）](report/Executive_Report.pdf) · [分析代码（Notebook）](notebooks/sales_forecasting_simulation.ipynb) · [Power BI 仪表板](dashboard/powerbi_dashboard.pbix)（`.pbix` 文件，需下载后用 Power BI Desktop 打开；下方"仪表板"一节说明其内容）
 
 ---
 
@@ -112,6 +112,23 @@ AdventureWorks 长期依赖单点预测做年度规划。管理层需要回答�
 5. **未纳入外部驱动** —— 模型完全基于内生历史数据，宏观经济、竞争格局与定价策略均在模型之外。
 
 **后续改进**：按季度滚动重跑。每新增一个季度即增加滚动财年观测、收紧增长分布；待历史积累充分后，带相关性抽样的分段蒙特卡洛将变得可行。
+
+---
+
+## 仪表板
+
+配套的 Power BI 仪表板共 6 页，用于向管理层做汇报：
+
+| 页面 | 内容 |
+|---|---|
+| 01 History | 历史月度销售，按 Internet / Reseller 双渠道堆积 |
+| 02 Risk Range | 蒙特卡洛结果直方图 + 三张 KPI 卡（预算下限 / 期望值 / 上行产能），两端 5% 尾部条形以警示色区分 |
+| 03 Model Comparison | 四个模型的年度总额分布叠加对比 |
+| 04 Operations | 365 天预测带（P5 / 中位数 / P95）+ 分财季中位数柱状图 |
+| 05 Segment | 分段预测条形图 + 维度切片器（渠道 / 品类 / 区域一键切换） |
+| 06 Recommendation | 四档情景 KPI 卡与最终建议 |
+
+> `.pbix` 是二进制格式，GitHub 无法在线预览——点击文件只会看到下载链接，这是正常现象。本仓库 `figures/` 目录下的图表由 notebook 生成，内容与仪表板一致，可直接在线查看。
 
 ---
 
