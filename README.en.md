@@ -18,7 +18,7 @@ Built on three years of AdventureWorks transaction history (121,253 order lines,
 
 - Identified and solved a **blocking methodological problem**: too few complete years left only one growth observation, resolved by evaluating three alternative definitions and adopting a rolling fiscal year
 - Three bootstrap refinements: month stratification, joint-day resampling (coherent segment forecasts), and an adapted transaction-level Poisson simulation
-- Sensitivity analysis across five assumption sets, plus three independently coded implementations cross-validating each other
+- Sensitivity analysis across five assumption sets, plus an independently constructed (transaction-level) cross-validation of the zero-growth result
 - Data-boundary diagnostics (identified an extraction cutoff, not declining demand)
 - A six-page interactive Power BI dashboard and a three-minute management pitch
 
@@ -113,7 +113,19 @@ Business findings that came out of it: Bikes account for **84% of revenue** (con
 
 ## Validation
 
-- **Three-way cross-check:** stratified daily bootstrap ($53.00M), joint-day bootstrap ($53.04M) and transaction-level simulation ($53.14M) — three independently coded resampling schemes over the same pool agree within **0.3%**.
+**First, two things that must not be conflated: differences between models are the finding; agreement within one scenario is the validation.**
+
+**The large gap between models is the core finding, not an error.** Monte Carlo ($75.9M) and the plain bootstrap ($37.1M) differ by more than 2×. Neither is miscalculated — they answer different questions: one assumes the growth trend continues, the other implicitly forecasts "next year is a random mix of the past three". That gap is the message for management.
+
+**Agreement within one scenario is a correctness check.** The three implementations below all target the same question (zero growth) over the same pool (last 365 days):
+
+| Implementation | Annual total | What the agreement proves |
+|---|---|---|
+| Stratified daily bootstrap | $53.00M | baseline |
+| Joint-day bootstrap | $53.04M | **weak** — same sampling design as above (it carries day *indices* rather than day *values*), so agreement is near-automatic; it only shows the code is correct |
+| Transaction-level Poisson | $53.14M | **strong** — a genuinely different construction (Poisson counts × order-line resampling) reaching the same answer by another route |
+
+Maximum spread 0.26%. Stated honestly: **one genuinely independent cross-validation plus one code-correctness self-check** — not "three independent methods confirming each other".
 - **Sensitivity analysis:** re-ran the forecast under five assumption sets (alternative growth definitions, σ × 1.5, zero-growth stress, literal-brief base). Quantified that using the stale calendar-2019 base instead of the current run rate would cut the central forecast by **$14.6M**.
 - **Reproducibility:** fixed random seeds throughout; every figure and number in the report regenerates exactly on re-run.
 
