@@ -126,6 +126,7 @@ Business findings that came out of it: Bikes account for **84% of revenue** (con
 | Transaction-level Poisson | $53.14M | **strong** — a genuinely different construction (Poisson counts × order-line resampling) reaching the same answer by another route |
 
 Maximum spread 0.26%. Stated honestly: **one genuinely independent cross-validation plus one code-correctness self-check** — not "three independent methods confirming each other".
+
 - **Sensitivity analysis:** re-ran the forecast under five assumption sets (alternative growth definitions, σ × 1.5, zero-growth stress, literal-brief base). Quantified that using the stale calendar-2019 base instead of the current run rate would cut the central forecast by **$14.6M**.
 - **Reproducibility:** fixed random seeds throughout; every figure and number in the report regenerates exactly on re-run.
 
