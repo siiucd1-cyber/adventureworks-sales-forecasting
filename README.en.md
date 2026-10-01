@@ -59,7 +59,7 @@ Built on three years of AdventureWorks transaction history (121,253 order lines,
 | Reseller growth without profit | LTM revenue +34%, gross profit +$0.76M → −$0.63M |
 | Selling below cost | 61% of reseller revenue ($22.5M) is priced below standard cost |
 | Recommendation: three pricing steps | Gross profit $6.0M → $9.3M, gross margin 11.3% → 18.2% (assuming 20% of affected volume is lost; revenue about 4% lower); step 1, a floor-and-approval rule for extra discounts, alone adds +$1.2M without reducing revenue |
-| Next-year operating simulation | 10,000 trials (growth × mix × execution): gross margin 11.3% → 16.7% (+5.3 points, 90% interval +3.4 to +6.9), gross profit $8.6M → $12.2M (+42%); the 90% interval with the initiatives lies entirely above the one without |
+| Next-year operating simulation | 10,000 trials (growth × mix × execution): gross margin 11.3% → 16.5% (+5.2 points, 90% interval +2.9 to +7.3), gross profit $8.6M → $11.6M (+36%); the gross-margin 90% interval with the initiatives lies entirely above the one without |
 
 → [Full analysis: bridge, root causes, scenarios, action list](#part-2-profitability-analysis)
 
@@ -240,7 +240,17 @@ Section 6 measures the initiatives on the last twelve months; management plans f
 |---|---|---|
 | Revenue growth | growth ~ N(43.2%, 8.8%) | Part 1 Monte Carlo, reproduced exactly |
 | Seasonality and product / channel mix | each trial resamples 365 LTM days within their calendar month; every drawn day carries its full order book (channel, model, price, cost) | Part 1 month-stratified bootstrap |
-| Execution of the initiatives | affected volume kept ~ Triangular(60%, mode 80%, 100%); fixed share of standard cost ~ Uniform(0%, 30%) | **Assumptions** — the data has no price-elasticity or cost-structure information |
+| Execution of the initiatives | share of volume kept on repriced lines, set **by order type** (below); fixed share of standard cost ~ Uniform(0%, 30%) | **Assumptions** — the data has no price-elasticity or cost-structure information |
+
+**Volume kept, by order type.** The price rise differs a lot across repriced lines, so one retention assumption for all would be unrealistic (Section 6b uses a single 80% only as a simple illustration):
+
+| Order type | Share of repriced revenue | Average price rise | Volume kept (assumption) | Implied price elasticity |
+|---|---|---|---|---|
+| Standard price (mostly Road / Touring bikes) | 87% | +10% | 60% – 100%, mode 80% | about −2 |
+| Volume tier | 9% | +18% | 40% – 80%, mode 60% | about −2.3 |
+| Deep discount (clearance profile) | 4% | +96% | 0% – 30% | most volume disappears |
+
+For reference, research syntheses put the average price elasticity of consumer-goods brands at roughly −2 to −2.6. Resellers may react less (contracts, switching costs, passing the increase on to consumers) or more (competing brands offering better dealer margins). These are judgments, not estimates, to be replaced by a regional pilot.
 
 Both scenarios — **without initiatives** and **with all three** — run on the **same** simulated years. Growth and mix are identical, so the difference in each trial is the effect of the initiatives alone.
 
@@ -248,16 +258,30 @@ Both scenarios — **without initiatives** and **with all three** — run on the
 
 | Next 12 months (median, 90% interval) | Without initiatives | With all three | Change | Change % |
 |---|---|---|---|---|
-| Revenue | $75.9M ($67.5M – $84.4M) | $72.8M ($63.3M – $82.7M) | −$3.0M | −4% |
-| Cost of goods sold | $67.3M ($59.7M – $75.1M) | $60.7M ($52.6M – $69.1M) | −$6.4M | −10% |
-| Gross profit | $8.6M ($7.6M – $9.6M) | **$12.2M ($10.0M – $14.0M)** | **+$3.6M** (+$1.6M to +$4.9M) | **+42%** (+19% to +57%) |
-| Gross margin | 11.3% (10.5% – 12.2%) | **16.7% (14.7% – 18.3%)** | **+5.3 points** (+3.4 to +6.9) | relative +47% (+30% to +62%) |
-| Reseller gross margin | −1.7% | 5.5% | +7.2 points | — |
+| Revenue | $75.9M ($67.5M – $84.4M) | $70.2M ($61.4M – $79.3M) | −$5.7M | −7% |
+| Cost of goods sold | $67.3M ($59.7M – $75.1M) | $58.6M ($50.9M – $66.4M) | −$8.5M | −13% |
+| Gross profit | $8.6M ($7.6M – $9.6M) | **$11.6M ($9.4M – $13.7M)** | **+$3.1M** (+$1.0M to +$4.6M) | **+36%** (+12% to +53%) |
+| Gross margin | 11.3% (10.5% – 12.2%) | **16.5% (14.2% – 18.7%)** | **+5.2 points** (+2.9 to +7.3) | relative +46% (+26% to +66%) |
+| Reseller gross margin | −1.7% | 4.7% | +6.4 points | — |
 
-- **The two 90% intervals do not overlap**: the pessimistic end with initiatives (5th percentile: gross profit $9.96M, margin 14.7%) is above the optimistic end without them (95th percentile: $9.57M, 12.2%)
-- Gross profit is higher in 99.94% of trials, gross margin in all of them
-- **COGS falls by $6.4M, but this is not a cost saving**: unit costs do not change; COGS falls only because fewer units are sold. The margin improvement comes entirely from pricing
-- **The one assumption that can break the plan is the fixed share of cost**: at 40%, the median gain is still +$1.6M, but about 15% of trials lose money. That is why confirming the cost structure comes first in Section 8
+- **Revenue does not fall year on year**: both scenarios grow on the last twelve months ($53.0M), by +43% and +32%. The −7% is the gap between the two scenarios; about two-thirds of it comes from standard-price lines losing volume after a 10% price rise
+- **The gross-margin intervals do not overlap**: the pessimistic end with initiatives (5th percentile, 14.2%) is above the optimistic end without them (95th percentile, 12.2%). The gross-profit intervals overlap slightly ($9.4M vs $9.6M)
+- Gross profit is higher in 99.6% of trials, gross margin in all of them
+- **COGS falls, but this is not a cost saving**: unit costs do not change; COGS falls only because fewer units are sold. The margin improvement comes entirely from pricing
+
+**Where the conclusion breaks:**
+
+| Volume kept on standard-price lines | Median GP gain | P(gross profit improves) | Revenue vs no initiatives |
+|---|---|---|---|
+| 100% | +$4.3M | 100% | +1.4% |
+| 80% | +$3.0M | 100% | −7.4% |
+| 60% | +$1.7M | 85% | −16% |
+| 40% | +$0.4M | 56% | −25% |
+| 20% | −$0.9M | 40% | −34% |
+
+- The plan is robust if standard-price lines keep at least about 60% of their volume; if more than half is lost, it fails
+- If 40% of standard cost is fixed, the median gain shrinks to +$0.4M and about a third of trials lose money
+- Hence the order of execution in Section 8: confirm the cost structure, pilot the price change in one region, then roll it out
 
 > These are **projections under stated assumptions**, not realised results. Mix is frozen at the LTM pattern; if the shift towards loss-making models continues (Section 4), the no-initiative case would be worse than shown and the plan worth more.
 
