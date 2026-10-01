@@ -172,9 +172,9 @@ Writing a channel's gross profit as **GP = L × (r − c)** — L = volume value
 
 | Effect | Formula | Owner |
 |---|---|---|
-| Volume | (L₁ − L₀)(r₀ − c₀) | Sales — selling more at last year's economics |
-| Discount depth | L₁ (r₁ − r₀) | Pricing / sales — deeper discounts |
-| Product mix | −L₁ (c₁ − c₀) | Product / sales — selling higher-cost-ratio products |
+| Volume | (L₁ − L₀) × (r₀ − c₀) | Sales — selling more at last year's economics |
+| Discount depth | L₁ × (r₁ − r₀) | Pricing / sales — deeper discounts |
+| Product mix | −L₁ × (c₁ − c₀) | Product / sales — selling higher-cost-ratio products |
 
 Each product has a single standard cost and list price across the whole history, so c can **only** move with product mix — there is no hidden cost-inflation term. This is the same technique as a budget-versus-actual variance analysis.
 
