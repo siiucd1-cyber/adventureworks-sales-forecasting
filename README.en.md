@@ -4,7 +4,7 @@
 
 > First replace a single-point sales forecast with a full distribution of outcomes — then ask whether that revenue is profitable, where profit is lost, and what should change.
 
-Built on three years of AdventureWorks transaction history (121,253 order lines, $109.8M in sales), the project has two parts. **Part 1** delivers a 12-month forecast as a probability distribution, quantifies the chance of hitting management targets, and produces channel / category / region breakdowns that reconcile exactly with the company total. **Part 2** uses the cost fields in the data for a profitability analysis: it decomposes why gross profit changed, quantifies a pricing fix, and carries the revenue forecast through to a profit forecast.
+Built on three years of AdventureWorks transaction history (121,253 order lines, $109.8M in sales), the project has two parts. **Part 1** delivers a 12-month forecast as a probability distribution, quantifies the chance of hitting management targets, and produces channel / category / region breakdowns that reconcile exactly with the company total. **Part 2** uses the cost fields in the data for a profitability analysis: it decomposes why gross profit changed, quantifies a pricing fix, and simulates next year's results with and without it.
 
 ---
 
@@ -22,7 +22,7 @@ Built on three years of AdventureWorks transaction history (121,253 order lines,
 - Data-boundary diagnostics (identified an extraction cutoff, not declining demand)
 - A six-page interactive Power BI dashboard and a three-minute management pitch
 
-**Part 2: profitability analysis** (an independent extension after the module, [detailed below](#part-2-profitability-analysis)): channel × category margin matrix, gross-profit bridge (exact volume / discount / mix decomposition), reseller break-even discount analysis, price-floor scenarios, an initiative bridge (three steps with an execution order and KPI targets), and the extension from revenue forecast to profit forecast.
+**Part 2: profitability analysis** (an independent extension after the module, [detailed below](#part-2-profitability-analysis)): channel × category margin matrix, gross-profit bridge (exact volume / discount / mix decomposition), reseller break-even discount analysis, price-floor scenarios, an initiative bridge (three steps with an execution order and KPI targets), and a next-year operating simulation combining revenue growth, product mix and execution uncertainty.
 
 ---
 
@@ -59,7 +59,7 @@ Built on three years of AdventureWorks transaction history (121,253 order lines,
 | Reseller growth without profit | LTM revenue +34%, gross profit +$0.76M → −$0.63M |
 | Selling below cost | 61% of reseller revenue ($22.5M) is priced below standard cost |
 | Recommendation: three pricing steps | Gross profit $6.0M → $9.3M, gross margin 11.3% → 18.2% (assuming 20% of affected volume is lost; revenue about 4% lower); step 1, a floor-and-approval rule for extra discounts, alone adds +$1.2M without reducing revenue |
-| Profit forecast | Status quo $8.6M (90%: $7.7M – $9.5M); about $11.7M with a break-even floor and 20% of affected volume lost |
+| Next-year operating simulation | 10,000 trials (growth × mix × execution): status quo gross profit $8.6M at 11.3% margin; with all three steps $12.2M (90%: $10.0M – $14.0M) at 16.7%, better than the status quo in 99.9% of trials |
 
 → [Full analysis: bridge, root causes, scenarios, action list](#part-2-profitability-analysis)
 
@@ -232,11 +232,32 @@ One policy is easier to approve, sequence and assign when it is split into separ
 - All three steps: gross profit $6.01M → $9.27M, company gross margin 11.3% → 18.2%, reseller gross margin −1.7% → 7.5%, on revenue about $2.1M (4%) lower
 - A caveat for step 1: for **clearance stock** the standard cost is already sunk — if the alternative is writing the stock off, selling below standard cost can be right. That is why step 1 is an approval rule, not a ban, and why its gain is an upper bound
 
-### 7 · From revenue forecast to profit forecast
+### 7 · Next-year operating simulation: status quo vs initiatives
 
-![Profit forecast](figures/15_profit_forecast.png)
+Section 6 measures the initiatives on the last twelve months; management plans for the **next** twelve, where three things are uncertain at once. The simulation combines them (10,000 trials):
 
-The Part 1 Monte Carlo revenue distribution (10,000 trials, same seed, reproduced exactly) multiplied by a margin scenario: at the status quo, next-twelve-month gross profit centres on **$8.6M (90% interval $7.7M – $9.5M)**; with a break-even floor and 20% of the affected volume lost, revenue is about 5% lower but gross profit centres on **$11.7M**, with the whole distribution above the status-quo upper bound. In other words, **this one pricing decision is worth more than the entire range of revenue uncertainty.**
+| Uncertainty | How it is simulated | Source |
+|---|---|---|
+| Revenue growth | growth ~ N(43.2%, 8.8%) | Part 1 Monte Carlo, reproduced exactly |
+| Seasonality and product / channel mix | each trial resamples 365 LTM days within their calendar month; every drawn day carries its full order book (channel, model, price, cost) | Part 1 month-stratified bootstrap |
+| Execution of the initiatives | affected volume kept ~ Triangular(60%, mode 80%, 100%); fixed share of standard cost ~ Uniform(0%, 30%) | **Assumptions** — the data has no price-elasticity or cost-structure information |
+
+![Next-year operating simulation](figures/15_profit_forecast.png)
+
+| Next 12 months (median, 90% interval) | Status quo | Step 1 only | All three steps |
+|---|---|---|---|
+| Revenue | $75.9M | $76.4M | $72.8M ($63.3M – $82.7M) |
+| Cost of goods sold | $67.3M | $66.3M | $60.7M |
+| Gross profit | $8.6M ($7.6M – $9.6M) | $10.1M ($9.1M – $11.2M) | **$12.2M ($10.0M – $14.0M)** |
+| Gross margin | 11.3% | 13.3% | **16.7% (14.7% – 18.3%)** |
+| Reseller gross margin | −1.7% | 1.2% | 5.5% |
+
+- **Step 1 only (discount approval)**: gross profit +$1.5M, gross margin +1.9 points, revenue essentially unchanged — better than the status quo in all 10,000 trials
+- **All three steps**: gross profit +$3.6M (90%: +$1.6M to +$4.9M), gross margin 11.3% → 16.7%, reseller margin −1.7% → 5.5%, at the cost of ~$3.0M (4%) of revenue. Across the assumed ranges (60–100% of affected volume kept, 0–30% of cost fixed) it beats the status quo in 99.9% of trials
+- **COGS falls by ~$6.4M, but this is not a cost saving**: unit costs do not change; COGS falls only because fewer units are sold. The margin improvement comes entirely from pricing
+- **The one assumption that can break the plan is the fixed share of cost**: at 40%, the median gain of all three steps is still +$1.6M, but about 15% of trials lose money. That is why confirming the cost structure comes first in Section 8
+
+> These are **projections under stated assumptions**, not realised results. Mix is frozen at the LTM pattern; if the shift towards loss-making models continues (Section 4), the status quo would be worse than shown and the plan worth more.
 
 ### 8 · Findings → actions
 
