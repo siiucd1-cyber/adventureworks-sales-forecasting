@@ -1,10 +1,10 @@
-# Probabilistic Sales Forecasting — Monte Carlo & Bootstrap Simulation
+# AdventureWorks Sales Forecasting & Profitability Analysis
 
 *[中文版](README.md)　|　Capstone project, MSc Financial Data Technology, University College Dublin*
 
-> Replacing a single-point sales forecast with a full distribution of outcomes, so a business can plan against **risk** rather than against one number.
+> First replace a single-point sales forecast with a full distribution of outcomes — then ask whether that revenue is profitable, where profit is lost, and what should change.
 
-Built on three years of AdventureWorks transaction history (121,253 order lines, $109.8M in sales), this project delivers a 12-month forecast as a probability distribution, quantifies the chance of hitting management targets, and produces channel / category / region breakdowns that reconcile exactly with the company total.
+Built on three years of AdventureWorks transaction history (121,253 order lines, $109.8M in sales), the project has two parts. **Part 1** delivers a 12-month forecast as a probability distribution, quantifies the chance of hitting management targets, and produces channel / category / region breakdowns that reconcile exactly with the company total. **Part 2** uses the cost fields in the data for a profitability analysis: it decomposes why gross profit changed, quantifies a pricing fix, and carries the revenue forecast through to a profit forecast.
 
 ---
 
@@ -22,13 +22,17 @@ Built on three years of AdventureWorks transaction history (121,253 order lines,
 - Data-boundary diagnostics (identified an extraction cutoff, not declining demand)
 - A six-page interactive Power BI dashboard and a three-minute management pitch
 
+**Part 2: profitability analysis** (an independent extension after the module, [detailed below](#part-2-profitability-analysis)): channel × category margin matrix, gross-profit bridge (exact volume / discount / mix decomposition), reseller break-even discount analysis, price-floor scenarios, and the extension from revenue forecast to profit forecast.
+
 ---
 
-**Deliverables:** [Executive report (PDF)](report/Executive_Report.pdf) · [Analysis notebook](notebooks/sales_forecasting_simulation.ipynb) · [**⬇️ Download Power BI dashboard**](https://github.com/siiucd1-cyber/adventureworks-sales-forecasting/raw/main/dashboard/powerbi_dashboard.pbix)
+**Deliverables:** [Executive report (PDF)](report/Executive_Report.pdf) · [Forecasting notebook](notebooks/sales_forecasting_simulation.ipynb) · [Profitability notebook](notebooks/profitability_analysis.ipynb) · [**⬇️ Download Power BI dashboard**](https://github.com/siiucd1-cyber/adventureworks-sales-forecasting/raw/main/dashboard/powerbi_dashboard.pbix)
 
 ---
 
 ## Key results
+
+### Revenue forecast (Part 1)
 
 | | Forecast | 90% interval |
 |---|---|---|
@@ -46,6 +50,18 @@ Built on three years of AdventureWorks transaction history (121,253 order lines,
 | Upside capacity | $84M | Size supply chain, do not budget for it |
 
 ![Monte Carlo distribution](figures/02_monte_carlo.png)
+
+### Profitability (Part 2)
+
+| Finding | Numbers |
+|---|---|
+| Profit is concentrated in the Internet channel | Internet: 30% of revenue at a 41% margin, earning more than total company gross profit; Reseller: 70% of revenue at a negative margin |
+| Reseller growth without profit | LTM revenue +34%, gross profit +$0.76M → −$0.63M |
+| Selling below cost | 61% of reseller revenue ($22.5M) is priced below standard cost |
+| Recommendation: reseller price floor | +$2.2M gross profit (company GP $6.0M → $8.2M); the cost is −$2.8M revenue if 20% of affected volume leaves |
+| Profit forecast | Status quo $8.6M (90%: $7.7M – $9.5M); about $11.7M with a break-even floor and 20% of affected volume lost |
+
+→ [Full analysis: bridge, root causes, scenarios, action list](#part-2-profitability-analysis)
 
 ---
 
@@ -132,7 +148,101 @@ Maximum spread 0.26%. Stated honestly: **one genuinely independent cross-validat
 
 ---
 
-## Limitations
+## Part 2: Profitability analysis
+
+Part 1 answered *how much will we sell*. The next questions in a business review are: **is that revenue profitable, where is profit being lost, and what should change?** The cost fields in the data (standard cost, list price) were not needed for Part 1; this part uses them to take the analysis from revenue to gross profit. Full analysis: [profitability notebook](notebooks/profitability_analysis.ipynb).
+
+> Definitions: gross profit = sales amount − standard cost. Comparison windows match the Part 1 forecast base: last twelve months (LTM, 2019-06-17 to 2020-06-15) vs the prior 365 days.
+
+### 1 · Where the profit is made
+
+![Margin matrix](figures/10_margin_matrix.png)
+
+The two channels are two different businesses. Internet sells at list price: 30% of revenue at a 41% gross margin — **this one channel earns more than the company's total gross profit**. Reseller sells at 60% of list: 70% of revenue at a negative margin. Reseller Bikes, the largest cell ($29.4M), loses $1.2M.
+
+### 2 · Growth without profit in the reseller channel
+
+![Growth without profit](figures/11_growth_without_profit.png)
+
+LTM reseller revenue grew 34%, while reseller gross profit fell from +$0.76M to −$0.63M. Company gross profit still rose only because Internet revenue nearly tripled. A plan that targets revenue growth alone would reward exactly the growth that is eroding margin.
+
+### 3 · Gross-profit bridge: who owns the change
+
+Writing a channel's gross profit as **GP = L × (r − c)** — L = volume valued at list price, r = realised price ÷ list (discount depth), c = standard cost ÷ list — the change between two periods splits **exactly** into three effects with different owners:
+
+| Effect | Formula | Owner |
+|---|---|---|
+| Volume | (L₁ − L₀)(r₀ − c₀) | Sales — selling more at last year's economics |
+| Discount depth | L₁ (r₁ − r₀) | Pricing / sales — deeper discounts |
+| Product mix | −L₁ (c₁ − c₀) | Product / sales — selling higher-cost-ratio products |
+
+Each product has a single standard cost and list price across the whole history, so c can **only** move with product mix — there is no hidden cost-inflation term. This is the same technique as a budget-versus-actual variance analysis.
+
+![Gross-profit bridge](figures/12_gross_profit_bridge.png)
+
+- Company gross profit rose from $3.24M to $6.01M; essentially all of the gain is **Internet volume (+$4.18M)**
+- 35% more reseller volume added only +$0.27M: at last year's terms, each extra dollar of list value earned under 2 cents
+- The reseller loss is driven by **product mix (−$1.33M)**: the cost-to-list ratio of what resellers buy rose from 57.1% to 59.2%, while they pay 58–59% of list. **Deeper discounts** cost a further −$0.33M
+
+### 4 · Root cause 1: one discount for every model
+
+![Break-even discount](figures/13_breakeven_discount.png)
+
+The deepest reseller discount a model can take without losing money is 1 − cost/list. Mountain bikes have cost-to-list ratios of 54–56% and can take 44–46% off; Road and Touring bikes sit at 60.5–63.6% and can take only 36–39.5% off (the one exception is a Road-650 version at 59.1%). **A uniform 40% discount means every Road and Touring bike sold through resellers loses money.**
+
+The problem is growing: these loss-making versions went from 28% of reseller bike revenue in FY2018 to 59% in FY2019 and 70% in FY2020. The entire Touring line, plus Road-350-W and Road-750, entered the reseller channel during the LTM below break-even from day one (the two Mountain models launched at the same time are profitable).
+
+### 5 · Root cause 2: discounts on top of the standard discount
+
+![Price tiers](figures/14_discount_tiers.png)
+
+Beyond the standard 60%-of-list price there are two kinds of extra discount: **volume tiers** (45–57% of list, averaging 14 units per line versus 3 at the standard price) and **deep discounts** (12–38% of list, averaging 3–4 units per line — the profile of clearance or promotions). In the LTM, the standard-priced reseller business earned only $0.44M (1.3% margin), while extra discounts on just 10% of reseller revenue lost $1.07M. The data cannot say what these discounts were for, but it shows they were granted **below cost** — so they need a floor and an approval rule.
+
+### 6 · Action: what is a reseller price floor worth?
+
+Proposal: **no reseller order line may be priced below standard cost ÷ (1 − target margin).** One rule covers both root causes: loss-making models get model-specific reseller prices, and extra discounts cannot go below the floor.
+
+| Floor margin | Affected volume kept | Revenue change | GP change | Company gross margin |
+|---|---|---|---|---|
+| 0% (break-even) | 100% | +$2.2M | **+$2.2M** | 11.3% → 14.8% |
+| 0% (break-even) | 80% | −$2.8M | **+$2.2M** | 11.3% → 16.3% |
+| 0% (break-even) | 60% | −$7.7M | **+$2.2M** | 11.3% → 18.0% |
+| 5% | 80% | −$2.1M | +$3.3M | 11.3% → 18.2% |
+
+- In the LTM, **61% of reseller revenue ($22.5M) was sold below standard cost**, losing $2.2M in total. A break-even floor recovers that $2.2M, lifting company gross profit from $6.0M to $8.2M. Volume lost at a break-even price earned nothing anyway, so the gain does not depend on how much volume leaves
+- **The cost is revenue**: if 20% of the affected volume leaves, revenue falls by $2.8M. A plan judged on revenue would reject this; a plan judged on profit would adopt it. Putting that trade-off on the table is the point of the analysis
+- **It only holds if standard cost is mostly variable**: if 20% of standard cost were allocated fixed overhead and 40% of the affected volume left, the gain would shrink to about $0.2M; at 40% fixed overhead it would become a $1.8M loss. Confirming the cost structure with cost accounting (gross margin vs contribution margin) comes before any price change
+
+### 7 · From revenue forecast to profit forecast
+
+![Profit forecast](figures/15_profit_forecast.png)
+
+The Part 1 Monte Carlo revenue distribution (10,000 trials, same seed, reproduced exactly) multiplied by a margin scenario: at the status quo, next-twelve-month gross profit centres on **$8.6M (90% interval $7.7M – $9.5M)**; with a break-even floor and 20% of the affected volume lost, revenue is about 5% lower but gross profit centres on **$11.7M**, with the whole distribution above the status-quo upper bound. In other words, **this one pricing decision is worth more than the entire range of revenue uncertainty.**
+
+### 8 · Findings → actions
+
+| # | Finding | Root cause | Recommendation | Quantified impact (LTM basis) | Owner | Track with |
+|---|---|---|---|---|---|---|
+| 1 | Reseller revenue +34%, reseller GP +$0.76M → −$0.63M | Mix shift to Road / Touring (−$1.33M in the bridge) | Model-specific reseller prices for Road / Touring, replacing the uniform 40% discount | +$2.2M GP at a break-even floor; −$2.8M revenue if 20% of affected volume leaves | Pricing + Sales | Reseller GM by product family, monthly |
+| 2 | Extra discounts: 10% of reseller revenue, −$1.07M GP | Volume tiers and deep discounts below cost | Any line below the floor needs sign-off with a stated reason (clearance / launch / strategic account) | Included in #1 | Sales ops + Finance | Share of revenue below the floor |
+| 3 | New Touring line loss-making in the reseller channel from launch | Launch pricing set from list price without a channel-margin check | Add a channel-margin check to the product launch process | Avoids repeating the Touring line's $1.24M loss | Product + Finance | Channel margin of new models in their first two quarters |
+| 4 | Internet: 30% of revenue, more than 100% of company GP | Sells at list price | Prioritise Internet growth for profitable families — **after** loading Internet with fulfilment and marketing costs, which gross margin excludes | Not quantifiable without opex data | Marketing + Finance | Internet contribution margin per order |
+
+### Questions finance cannot answer alone
+
+The data shows **where** profit is lost; whether a recommendation is right depends on facts only the business holds:
+
+1. **Sales** — Is the 40% reseller discount contractual, a rebate structure, or a competitive response? How many resellers would leave under model-specific pricing?
+2. **Product** — Was the Touring line deliberately launched below cost to win share? If so, what is the path to a positive margin?
+3. **Cost accounting** — How much of standard cost is allocated fixed overhead? This decides whether "loss-making" lines really lose money at the contribution level
+4. **Sales ops** — What are the 12–38% deep discounts for (clearance, promotions, key accounts), and who approves them?
+5. **Channel** — Would steering Road / Touring towards the Internet channel upset resellers enough to hurt Mountain bike volume?
+
+**Limitations:** gross profit at standard cost only — the data has no cost variances, freight, returns or operating expenses, so Internet's advantage is overstated at the gross level; price elasticity is unknown, hence retention ranges instead of one estimate; the mechanisms in the sample data are realistic, but the magnitudes are not industry benchmarks.
+
+---
+
+## Limitations (Part 1)
 
 Stated plainly, because they bound how the output should be used:
 
@@ -170,7 +280,8 @@ Open it in **Power BI Desktop** (free, Windows) to explore all six pages and the
 ## Repository guide
 
 ```
-notebooks/   sales_forecasting_simulation.ipynb   full analysis, outputs saved (renders on GitHub)
+notebooks/   sales_forecasting_simulation.ipynb   Part 1: revenue forecast, outputs saved (renders on GitHub)
+             profitability_analysis.ipynb         Part 2: profitability analysis, outputs saved
 report/      Executive_Report.pdf                 14-page executive report, 9 figures + 8 tables
 dashboard/   powerbi_dashboard.pbix               6-page interactive dashboard
              pitch_data_for_powerbi.xlsx          simulation output prepared for BI charting
@@ -183,11 +294,12 @@ data/        AdventureWorks_Sales.xlsx            Microsoft sample dataset (star
 ```bash
 pip install -r requirements.txt
 jupyter notebook notebooks/sales_forecasting_simulation.ipynb   # Kernel → Restart & Run All
+jupyter notebook notebooks/profitability_analysis.ipynb
 ```
 
-Runs end to end in under a minute. Seeds are fixed, so output matches the report exactly.
+Each notebook runs end to end in under a minute. Seeds are fixed, so output matches the report exactly.
 
-**Tech stack:** Python (pandas, NumPy, Matplotlib) · Jupyter · Power BI (DAX measures, conditional formatting, binning) · dimensional modelling / star schema
+**Tech stack:** Python (pandas, NumPy, Matplotlib) · Jupyter · gross-profit bridge / variance analysis · cost-volume-profit and break-even analysis · Power BI (DAX measures, conditional formatting, binning) · dimensional modelling / star schema
 
 ---
 
