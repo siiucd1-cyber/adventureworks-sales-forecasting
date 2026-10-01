@@ -152,7 +152,7 @@ Maximum spread 0.26%. Stated honestly: **one genuinely independent cross-validat
 
 Part 1 answered *how much will we sell*. The next questions in a business review are: **is that revenue profitable, where is profit being lost, and what should change?** The cost fields in the data (standard cost, list price) were not needed for Part 1; this part uses them to take the analysis from revenue to gross profit. Full analysis: [profitability notebook](notebooks/profitability_analysis.ipynb).
 
-> Definitions: gross profit = sales amount − standard cost. Comparison windows match the Part 1 forecast base: last twelve months (LTM, 2019-06-17 to 2020-06-15) vs the prior 365 days.
+> Definitions: gross profit = sales amount − standard cost. Comparison windows match the Part 1 forecast base: last twelve months (LTM, 2019-06-17 to 2020-06-15) vs the prior 365 days. Every number is computed directly from the raw data; assumptions (volume lost, fixed share of cost, the 5% target margin) and inferences (the names given to discount types, the suspected root cause in the action list) are flagged where they appear.
 
 ### 1 · Where the profit is made
 
@@ -188,15 +188,15 @@ Each product has a single standard cost and list price across the whole history,
 
 ![Break-even discount](figures/13_breakeven_discount.png)
 
-The deepest reseller discount a model can take without losing money is 1 − cost/list. Mountain bikes have cost-to-list ratios of 54–56% and can take 44–46% off; Road and Touring bikes sit at 60.5–63.6% and can take only 36–39.5% off (the one exception is a Road-650 version at 59.1%). **A uniform 40% discount means every Road and Touring bike sold through resellers loses money.**
+The deepest reseller discount a model can take without losing money is 1 − cost/list. Mountain bikes have cost-to-list ratios of 54–56% and can take 44–46% off; Road and Touring bikes sit at 60.5–63.6% and can take only 36–39.5% off (the one exception is a Road-650 version at 59.1%). In the data, 94.6% of reseller order lines are priced at exactly 60% of list — in effect a uniform 40% discount. **At that price, every Road and Touring bike sold through resellers loses money.**
 
-The problem is growing: these loss-making versions went from 28% of reseller bike revenue in FY2018 to 59% in FY2019 and 70% in FY2020. The entire Touring line, plus Road-350-W and Road-750, entered the reseller channel during the LTM below break-even from day one (the two Mountain models launched at the same time are profitable).
+The problem is growing: these loss-making versions went from 28% of reseller bike revenue in FY2018 to 59% in FY2019 and 70% in FY2020. The entire Touring line, plus Road-350-W and Road-750, entered the reseller channel during the LTM below break-even from their first reseller sale (these models went on sale online on 31 May 2019 and reached resellers in early July; the two Mountain models that entered at the same time are profitable).
 
 ### 5 · Root cause 2: discounts on top of the standard discount
 
 ![Price tiers](figures/14_discount_tiers.png)
 
-Beyond the standard 60%-of-list price there are two kinds of extra discount: **volume tiers** (45–57% of list, averaging 14 units per line versus 3 at the standard price) and **deep discounts** (12–38% of list, averaging 3–4 units per line — the profile of clearance or promotions). In the LTM, the standard-priced reseller business earned only $0.44M (1.3% margin), while extra discounts on just 10% of reseller revenue lost $1.07M. The data cannot say what these discounts were for, but it shows they were granted **below cost** — so they need a floor and an approval rule.
+Beyond the standard 60%-of-list price there are two kinds of extra discount: **volume tiers** (45–57% of list, averaging 14 units per line versus 3 at the standard price) and **deep discounts** (12–38% of list, averaging 3–4 units per line — the profile of clearance or promotions). These two names are my labels based on order-size patterns; the data has no field recording the type of discount. In the LTM, the standard-priced reseller business earned only $0.44M (1.3% margin), while extra discounts on just 10% of reseller revenue lost $1.07M. The data cannot say what these discounts were for, but it shows they were granted **below cost** — so they need a floor and an approval rule.
 
 ### 6 · Action: what is a reseller price floor worth?
 
@@ -244,7 +244,7 @@ The Part 1 Monte Carlo revenue distribution (10,000 trials, same seed, reproduce
 |---|---|---|---|---|---|---|
 | 1 | Extra discounts: 10% of reseller revenue, −$1.07M GP | Volume tiers and deep discounts below cost | **Start here.** Floor at standard cost; any line below it needs sign-off with a stated reason (clearance / launch / strategic account) | +$1.19M GP, revenue +$0.39M | Sales ops + Finance | GP of extra-discount lines: −$1.07M → +$0.29M |
 | 2 | Reseller revenue +34%, reseller GP +$0.76M → −$0.63M | Mix shift to Road / Touring (−$1.33M in the bridge) | Model-specific break-even reseller prices for Road / Touring, replacing the uniform 40% discount; then raise the floor for all reseller lines to a 5% margin | +$0.96M GP for −$3.16M revenue at break-even; a further +$1.10M GP at the 5% floor | Pricing + Sales | Reseller GM: −1.7% → 7.5%; Road / Touring reseller GM: −9.3% → 5.0% |
-| 3 | New Touring line loss-making in the reseller channel from launch | Launch pricing set from list price without a channel-margin check | Add a channel-margin check to the product launch process: every channel must clear the minimum margin | Avoids repeating the Touring line's $1.24M loss | Product + Finance | Channel margin of new models in their first two quarters ≥ 5% |
+| 3 | New Touring line loss-making in the reseller channel from launch | Suspected: prices set without a channel-margin check (cannot be confirmed from the data; to be checked with Product) | Add a channel-margin check to the product launch process: every channel must clear the minimum margin | Avoids repeating the Touring line's $1.24M loss | Product + Finance | Channel margin of new models in their first two quarters ≥ 5% |
 | 4 | Internet: 30% of revenue, more than 100% of company GP | Sells at list price | Prioritise Internet growth for profitable families — **after** loading Internet with fulfilment and marketing costs, which gross margin excludes | Not quantifiable without opex data | Marketing + Finance | Internet contribution margin per order (to be built) |
 
 Company level after all three steps (current → target): gross profit $6.01M → $9.27M, gross margin 11.3% → 18.2%, share of reseller revenue priced below cost 61% → 0%.
