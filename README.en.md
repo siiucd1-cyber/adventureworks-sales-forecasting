@@ -22,7 +22,7 @@ Built on three years of AdventureWorks transaction history (121,253 order lines,
 - Data-boundary diagnostics (identified an extraction cutoff, not declining demand)
 - A six-page interactive Power BI dashboard and a three-minute management pitch
 
-**Part 2: profitability analysis** (an independent extension after the module, [detailed below](#part-2-profitability-analysis)): channel × category margin matrix, gross-profit bridge (exact volume / discount / mix decomposition), reseller break-even discount analysis, price-floor scenarios, and the extension from revenue forecast to profit forecast.
+**Part 2: profitability analysis** (an independent extension after the module, [detailed below](#part-2-profitability-analysis)): channel × category margin matrix, gross-profit bridge (exact volume / discount / mix decomposition), reseller break-even discount analysis, price-floor scenarios, an initiative bridge (three steps with an execution order and KPI targets), and the extension from revenue forecast to profit forecast.
 
 ---
 
@@ -58,7 +58,7 @@ Built on three years of AdventureWorks transaction history (121,253 order lines,
 | Profit is concentrated in the Internet channel | Internet: 30% of revenue at a 41% margin, earning more than total company gross profit; Reseller: 70% of revenue at a negative margin |
 | Reseller growth without profit | LTM revenue +34%, gross profit +$0.76M → −$0.63M |
 | Selling below cost | 61% of reseller revenue ($22.5M) is priced below standard cost |
-| Recommendation: reseller price floor | +$2.2M gross profit (company GP $6.0M → $8.2M); the cost is −$2.8M revenue if 20% of affected volume leaves |
+| Recommendation: three pricing steps | Gross profit $6.0M → $9.3M, gross margin 11.3% → 18.2% (assuming 20% of affected volume is lost; revenue about 4% lower); step 1, a floor-and-approval rule for extra discounts, alone adds +$1.2M without reducing revenue |
 | Profit forecast | Status quo $8.6M (90%: $7.7M – $9.5M); about $11.7M with a break-even floor and 20% of affected volume lost |
 
 → [Full analysis: bridge, root causes, scenarios, action list](#part-2-profitability-analysis)
@@ -213,6 +213,25 @@ Proposal: **no reseller order line may be priced below standard cost ÷ (1 − t
 - **The cost is revenue**: if 20% of the affected volume leaves, revenue falls by $2.8M. A plan judged on revenue would reject this; a plan judged on profit would adopt it. Putting that trade-off on the table is the point of the analysis
 - **It only holds if standard cost is mostly variable**: if 20% of standard cost were allocated fixed overhead and 40% of the affected volume left, the gain would shrink to about $0.2M; at 40% fixed overhead it would become a $1.8M loss. Confirming the cost structure with cost accounting (gross margin vs contribution margin) comes before any price change
 
+#### Split into three steps: which comes first?
+
+One policy is easier to approve, sequence and assign when it is split into separate initiatives. The floor is applied in three steps, each measured on top of the previous one so nothing is counted twice (assuming 20% of affected volume is lost; a line loses volume once, the first time its price is raised):
+
+![Initiative bridge](figures/16_initiative_bridge.png)
+
+| Step | What it does | GP change | Revenue change |
+|---|---|---|---|
+| Current | | $6.01M | |
+| ① Discount approval | Volume tiers and deep discounts may not go below standard cost without sign-off | **+$1.19M** | +$0.39M |
+| ② Model-specific reseller prices | Standard-priced lines of loss-making models lifted to break-even | +$0.96M | −$3.16M |
+| ③ Minimum 5% margin | Floor for all reseller lines raised from break-even to a 5% margin | +$1.10M | +$0.71M |
+| **Target** | | **$9.27M** | −$2.06M in total |
+
+- **Step 1 is the biggest and cheapest win**: +$1.19M gross profit while revenue even rises slightly, because the lines affected were priced far below cost. It is also the easiest to implement — an approval rule, not a price-list change
+- **Step 2 is the only step that clearly costs revenue**: +$0.96M gross profit for −$3.16M revenue. It needs the sales conversation (questions 1 and 2 below) before it starts
+- All three steps: gross profit $6.01M → $9.27M, company gross margin 11.3% → 18.2%, reseller gross margin −1.7% → 7.5%, on revenue about $2.1M (4%) lower
+- A caveat for step 1: for **clearance stock** the standard cost is already sunk — if the alternative is writing the stock off, selling below standard cost can be right. That is why step 1 is an approval rule, not a ban, and why its gain is an upper bound
+
 ### 7 · From revenue forecast to profit forecast
 
 ![Profit forecast](figures/15_profit_forecast.png)
@@ -221,12 +240,14 @@ The Part 1 Monte Carlo revenue distribution (10,000 trials, same seed, reproduce
 
 ### 8 · Findings → actions
 
-| # | Finding | Root cause | Recommendation | Quantified impact (LTM basis) | Owner | Track with |
+| # | Finding | Root cause | Recommendation | Quantified impact (LTM basis, 20% of affected volume lost) | Owner | KPI: current → target |
 |---|---|---|---|---|---|---|
-| 1 | Reseller revenue +34%, reseller GP +$0.76M → −$0.63M | Mix shift to Road / Touring (−$1.33M in the bridge) | Model-specific reseller prices for Road / Touring, replacing the uniform 40% discount | +$2.2M GP at a break-even floor; −$2.8M revenue if 20% of affected volume leaves | Pricing + Sales | Reseller GM by product family, monthly |
-| 2 | Extra discounts: 10% of reseller revenue, −$1.07M GP | Volume tiers and deep discounts below cost | Any line below the floor needs sign-off with a stated reason (clearance / launch / strategic account) | Included in #1 | Sales ops + Finance | Share of revenue below the floor |
-| 3 | New Touring line loss-making in the reseller channel from launch | Launch pricing set from list price without a channel-margin check | Add a channel-margin check to the product launch process | Avoids repeating the Touring line's $1.24M loss | Product + Finance | Channel margin of new models in their first two quarters |
-| 4 | Internet: 30% of revenue, more than 100% of company GP | Sells at list price | Prioritise Internet growth for profitable families — **after** loading Internet with fulfilment and marketing costs, which gross margin excludes | Not quantifiable without opex data | Marketing + Finance | Internet contribution margin per order |
+| 1 | Extra discounts: 10% of reseller revenue, −$1.07M GP | Volume tiers and deep discounts below cost | **Start here.** Floor at standard cost; any line below it needs sign-off with a stated reason (clearance / launch / strategic account) | +$1.19M GP, revenue +$0.39M | Sales ops + Finance | GP of extra-discount lines: −$1.07M → +$0.29M |
+| 2 | Reseller revenue +34%, reseller GP +$0.76M → −$0.63M | Mix shift to Road / Touring (−$1.33M in the bridge) | Model-specific break-even reseller prices for Road / Touring, replacing the uniform 40% discount; then raise the floor for all reseller lines to a 5% margin | +$0.96M GP for −$3.16M revenue at break-even; a further +$1.10M GP at the 5% floor | Pricing + Sales | Reseller GM: −1.7% → 7.5%; Road / Touring reseller GM: −9.3% → 5.0% |
+| 3 | New Touring line loss-making in the reseller channel from launch | Launch pricing set from list price without a channel-margin check | Add a channel-margin check to the product launch process: every channel must clear the minimum margin | Avoids repeating the Touring line's $1.24M loss | Product + Finance | Channel margin of new models in their first two quarters ≥ 5% |
+| 4 | Internet: 30% of revenue, more than 100% of company GP | Sells at list price | Prioritise Internet growth for profitable families — **after** loading Internet with fulfilment and marketing costs, which gross margin excludes | Not quantifiable without opex data | Marketing + Finance | Internet contribution margin per order (to be built) |
+
+Company level after all three steps (current → target): gross profit $6.01M → $9.27M, gross margin 11.3% → 18.2%, share of reseller revenue priced below cost 61% → 0%.
 
 ### Questions finance cannot answer alone
 
